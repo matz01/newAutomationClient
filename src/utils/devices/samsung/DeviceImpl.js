@@ -1,0 +1,31 @@
+export const tvKey = {
+	'KEY_ENTER' : 29443,
+	'KEY_PAUSE' : 74,
+	'KEY_PAGE_UP' : 33,
+	'KEY_PAGE_DOWN' : 34,
+	'KEY_LEFT' : 4,
+	'KEY_UP' : 29460,
+	'KEY_RIGHT' : 5,
+	'KEY_DOWN' : 29461,
+	'KEY_0' : 17,
+	'KEY_1' : 101,
+	'KEY_2' : 98,
+	'KEY_3' : 6,
+	'KEY_4' : 8,
+	'KEY_5' : 9,
+	'KEY_6' : 10,
+	'KEY_7' : 12,
+	'KEY_8' : 13,
+	'KEY_9' : 14,
+	'KEY_RED' : 82, //403,
+	'KEY_GREEN' : 71, //404,
+	'KEY_YELLOW' : 89, //405, //502 sony
+	'KEY_BLUE' : 66, //406,
+	'KEY_RW' : 69,
+	'KEY_STOP' : 70,
+	'KEY_PLAY' : 71,
+	'KEY_FF' : 72, //465
+	'KEY_INFO' : 31,
+	'KEY_RETURN' : 88, //8,
+	'KEY_EXIT': 45
+};
