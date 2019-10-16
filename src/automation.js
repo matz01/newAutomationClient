@@ -14,10 +14,12 @@ import { clickElement, elementIsInPage, gotoPage } from './actions';
 import pressKey from './actions/pressKey';
 import get from 'lodash/get';
 
+
 let vendor, api_host, actionApi, testId;
 let progressiveActionId = 0;
 let lastStatus = 'waiting';
 let lastBody = {};
+
 
 const serverLog = (msg) => {
     console.log(msg)
@@ -116,10 +118,10 @@ const sendInstructionsRequest = () => {
     try{
         serverLog('sendInstructionsRequest')
         fetch(`${api_host}/instructions`, {
-            mode: 'no-cors',
             method: 'GET',
             headers: {
                 'vendor': vendor,
+                'Content-Type': 'application/json'
             }
         })
             .then( checkStatus )

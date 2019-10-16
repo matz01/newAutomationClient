@@ -23232,10 +23232,10 @@ var sendInstructionsRequest = function sendInstructionsRequest() {
   try {
     serverLog('sendInstructionsRequest');
     fetch("".concat(api_host, "/instructions"), {
-      mode: 'no-cors',
       method: 'GET',
       headers: {
-        'vendor': vendor
+        'vendor': vendor,
+        'Content-Type': 'application/json'
       }
     }).then(checkStatus).then(function (r) {
       return r.json();
