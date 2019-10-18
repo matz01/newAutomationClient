@@ -23248,7 +23248,6 @@ var sendInstructionsRequest = function sendInstructionsRequest() {
 var sendRequest = function sendRequest() {
   try {
     fetch("".concat(api_host).concat(actionApi), {
-      mode: 'no-cors',
       method: 'GET',
       headers: {
         'vendor': vendor,

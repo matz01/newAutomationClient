@@ -135,7 +135,6 @@ const sendInstructionsRequest = () => {
 const sendRequest = () => {
     try {
         fetch(`${api_host}${actionApi}`, {
-            mode: 'no-cors',
             method: 'GET',
             headers: {
                 'vendor': vendor,
