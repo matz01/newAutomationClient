@@ -23133,21 +23133,21 @@ function () {
             document.cookie = "app-automation-actionApi=".concat(actionApi);
             document.cookie = "app-automation-next=".concat(data.next);
             document.cookie = "app-automation-testId=".concat(testId);
-            displayInConsole('goToPage');
+            displayInConsole(progressiveActionId, 'goToPage');
             actions_gotoPage(data.params);
             displayStatus('ok');
             sendRequest();
             return _context.abrupt("break", 51);
 
           case 17:
-            displayInConsole('clickElement');
+            displayInConsole(progressiveActionId, 'clickElement');
             actions_clickElement(data.params);
             displayStatus('ok');
             sendRequest();
             return _context.abrupt("break", 51);
 
           case 22:
-            displayInConsole('elementIsInPage');
+            displayInConsole(progressiveActionId, 'elementIsInPage');
             _context.next = 25;
             return actions_elementIsInPage(data.params);
 
@@ -23162,13 +23162,13 @@ function () {
             return _context.abrupt("break", 51);
 
           case 31:
-            displayInConsole('connected, no action');
+            displayInConsole(progressiveActionId, 'connected, no action');
             displayStatus('ok');
             sendRequest();
             return _context.abrupt("break", 51);
 
           case 35:
-            displayInConsole('pressKey');
+            displayInConsole(progressiveActionId, 'pressKey');
             actions_pressKey(vendor, get_default()(data.params, 'key'));
             displayStatus('ok');
             sendRequest();
@@ -23182,7 +23182,7 @@ function () {
 
           case 42:
             utils_deleteCookies();
-            displayInConsole('test finish. Reload in 5min');
+            displayInConsole(progressiveActionId, 'test finish. Reload in 5min');
             displayStatus('ok');
             setTimeout(function () {
               actions_gotoPage({
@@ -23192,7 +23192,7 @@ function () {
             return _context.abrupt("break", 51);
 
           case 47:
-            displayInConsole("ops..., not handled!");
+            displayInConsole(progressiveActionId, "ops..., not handled!");
             displayStatus("ko");
             utils_deleteCookies();
             return _context.abrupt("break", 51);

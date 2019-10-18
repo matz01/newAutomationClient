@@ -46,21 +46,21 @@ const doTestAction = async (data) => {
                 document.cookie = `app-automation-actionApi=${actionApi}`;
                 document.cookie = `app-automation-next=${data.next}`;
                 document.cookie = `app-automation-testId=${testId}`
-                displayInConsole('goToPage');
+                displayInConsole(progressiveActionId,'goToPage');
                 gotoPage(data.params);
                 displayStatus('ok')
                 sendRequest();
                 break;
 
             case 'click':
-                displayInConsole('clickElement');
+                displayInConsole(progressiveActionId,'clickElement');
                 clickElement(data.params);
                 displayStatus('ok')
                 sendRequest();
                 break;
 
             case 'waitForElement':
-                displayInConsole('elementIsInPage');
+                displayInConsole(progressiveActionId,'elementIsInPage');
                 lastStatus = await elementIsInPage(data.params);
                 if(lastStatus === 'ko') deleteCookies()
                 lastBody = lastStatus === 'ko' ? {msg: 'element not found'} : lastBody;
@@ -69,13 +69,13 @@ const doTestAction = async (data) => {
                 break;
 
             case 'connected':
-                displayInConsole('connected, no action');
+                displayInConsole(progressiveActionId,'connected, no action');
                 displayStatus('ok')
                 sendRequest();
                 break;
 
             case 'keyDown':
-                displayInConsole('pressKey');
+                displayInConsole(progressiveActionId,'pressKey');
                 pressKey(vendor, get(data.params, 'key'));
                 displayStatus('ok')
                 sendRequest();
@@ -89,7 +89,7 @@ const doTestAction = async (data) => {
 
             case "finish":
                 deleteCookies();
-                displayInConsole('test finish. Reload in 5min');
+                displayInConsole(progressiveActionId,'test finish. Reload in 5min');
                 displayStatus('ok');
                 setTimeout(()=>{
                     gotoPage({url: '/'});
@@ -97,7 +97,7 @@ const doTestAction = async (data) => {
                 break;
 
             default:
-                displayInConsole(`ops..., not handled!`);
+                displayInConsole(progressiveActionId, `ops..., not handled!`);
                 displayStatus("ko");
                 deleteCookies()
                 break;
