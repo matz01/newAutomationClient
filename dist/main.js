@@ -23252,9 +23252,9 @@ var sendRequest = function sendRequest() {
       method: 'GET',
       headers: {
         'vendor': vendor,
+        'Content-Type': 'application/json',
         index: progressiveActionId,
-        status: lastStatus,
-        msg: lastBody
+        status: lastStatus
       }
     }).then(checkStatus).then(function (r) {
       return r.json();

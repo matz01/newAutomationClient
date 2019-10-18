@@ -139,9 +139,9 @@ const sendRequest = () => {
             method: 'GET',
             headers: {
                 'vendor': vendor,
+                'Content-Type': 'application/json',
                 index: progressiveActionId,
-                status: lastStatus,
-                msg: lastBody
+                status: lastStatus
             }
         })
             .then(checkStatus)
