@@ -172,7 +172,8 @@ function checkStatus(response) {
 
 const instructionResponseHandler = (data) => {
     try {
-        serverLog('instructionResponseHandler')
+
+        serverLog('instructionResponseHandlerz')
         if (data.path === undefined) {
             displayInConsole(progressiveActionId, 'polling for setup...');
             setTimeout(() => {

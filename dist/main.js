@@ -23284,7 +23284,7 @@ function checkStatus(response) {
 
 var automation_instructionResponseHandler = function instructionResponseHandler(data) {
   try {
-    serverLog('instructionResponseHandler');
+    serverLog('instructionResponseHandlerz');
 
     if (data.path === undefined) {
       displayInConsole(progressiveActionId, 'polling for setup...');
