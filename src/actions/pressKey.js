@@ -10,10 +10,17 @@ const pressKey = (device, keyCode) => {
             cancelable : true,
             keyCode : devicesKeyMap[device][keyCode]
         };
+
+
+        window.crossBrowser_initKeyboardEvent("keydown", logKey)
+        /*
         const down = new KeyboardEvent("keydown", logKey);
         const up = new KeyboardEvent("keyup", logKey);
-        document.body.dispatchEvent(down);
-        document.body.dispatchEvent(up);
+         */
+        //document.body.dispatchEvent(down);
+        //document.body.dispatchEvent(up);
+
+
         return 'ok';
     } catch (e) {
         return 'ko'
