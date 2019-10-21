@@ -2,12 +2,8 @@ import 'unfetch/polyfill'
 import createConsole from './utils/createConsole';
 import getCookieByName from './utils/getCookieByName';
 import {
-    displayerror,
-    displayInApiConsole,
-    displayrecived,
-    displayInIdConsole,
-    displayStatus,
-    displayInConsole
+    displayId,
+    displayLog
 } from './utils/doDisplay';
 import deleteCookies from './utils/deleteCookies';
 import { clickElement, elementIsInPage, gotoPage } from './actions';
@@ -17,6 +13,7 @@ import get from 'lodash/get';
 
 let vendor, api_host, actionApi, testId;
 let progressiveActionId = 0;
+let lastProgressiveActionId = -1;
 let lastStatus = 'waiting';
 let lastBody = {};
 
@@ -39,45 +36,38 @@ const doTestAction = async (data) => {
     try {
         lastStatus = "ok";
         lastBody = {};
-        displayStatus('...')
-        displayrecived(data.action)
         switch (data.action) {
             case 'goToPage':
+                displayLog(`url: ${get(data, 'params.url')}`);
                 document.cookie = `app-automation-actionApi=${actionApi}`;
                 document.cookie = `app-automation-next=${data.next}`;
                 document.cookie = `app-automation-testId=${testId}`
-                displayInConsole(progressiveActionId,'goToPage');
                 gotoPage(data.params);
-                displayStatus('ok')
                 sendRequest();
                 break;
 
             case 'click':
-                displayInConsole(progressiveActionId,'clickElement');
+                displayLog(`click on: ${get(data, 'params.element')}`);
                 clickElement(data.params);
-                displayStatus('ok')
                 sendRequest();
                 break;
 
             case 'waitForElement':
-                displayInConsole(progressiveActionId,'elementIsInPage');
+                displayLog(`search for: ${get(data, 'params.element')}`);
                 lastStatus = await elementIsInPage(data.params);
                 if(lastStatus === 'ko') deleteCookies()
                 lastBody = lastStatus === 'ko' ? {msg: 'element not found'} : lastBody;
-                displayStatus(lastStatus)
                 sendRequest();
                 break;
 
             case 'connected':
-                displayInConsole(progressiveActionId,'connected, no action');
-                displayStatus('ok')
+                displayLog('connected, no action');
                 sendRequest();
                 break;
 
             case 'keyDown':
-                displayInConsole(progressiveActionId,'pressKey');
+                displayLog(`key code: ${get(data.params, 'key')}`);
                 pressKey(vendor, get(data.params, 'key'));
-                displayStatus('ok')
                 sendRequest();
                 break;
 
@@ -89,34 +79,30 @@ const doTestAction = async (data) => {
 
             case "finish":
                 deleteCookies();
-                displayInConsole(progressiveActionId,'test finish. Reload in 5min');
-                displayStatus('ok');
+                displayLog('test finish. Reload in 5min');
                 setTimeout(()=>{
                     gotoPage({url: '/'});
                 }, 300000)
                 break;
 
             default:
-                displayInConsole(progressiveActionId, `ops..., not handled!`);
-                displayStatus("ko");
+                displayLog(`ops..., not handled!`);
                 deleteCookies()
                 break;
         }
     } catch (e) {
-        serverLog(`error doTestAction: ${e}`)
+        displayLog(`error doTestAction: ${e}`)
         deleteCookies();
         lastStatus = "ko";
-        displayStatus("ko")
         lastBody = {msg: e}
-        displayerror(e);
         sendRequest();
         console.error(e)
     }
 };
 
 const sendInstructionsRequest = () => {
+    displayLog('<- request to instruction');
     try{
-        serverLog('sendInstructionsRequest')
         fetch(`${api_host}/instructions`, {
             method: 'GET',
             headers: {
@@ -133,6 +119,7 @@ const sendInstructionsRequest = () => {
 }
 
 const sendRequest = () => {
+    displayLog(`<- ${lastStatus}`);
     try {
         fetch(`${api_host}${actionApi}`, {
             method: 'GET',
@@ -159,8 +146,7 @@ function checkStatus(response) {
         } else {
             let error = new Error(response.statusText);
             error.response = response;
-            displayerror(error);
-            serverLog(`error on checkStatus resp: ${error}`)
+            displayLog(`error on checkStatus resp: ${error}`)
             return Promise.reject(error);
         }
     } catch (e) {
@@ -171,72 +157,60 @@ function checkStatus(response) {
 
 const instructionResponseHandler = (data) => {
     try {
-
-        serverLog('instructionResponseHandlerz')
+        displayLog(`-> ${data.action}`)
         if (data.path === undefined) {
-            displayInConsole(progressiveActionId, 'polling for setup...');
             setTimeout(() => {
-                displayInConsole(progressiveActionId,'...');
                 sendInstructionsRequest();
             }, 5000);
         } else {
-            displayInApiConsole(data.path);
-            displayInConsole(progressiveActionId,'handshake ok');
+            displayId(data.path);
+            displayLog('handshake ok');
             testId = data.id;
-            displayInIdConsole(vendor, data.id)
             actionApi = data.path
             sendRequest()
         }
     } catch (e) {
-        serverLog(`error instructionResponseHandler: ${e}`)
-        displayerror(e);
+        displayLog(`error instructionResponseHandler: ${e}`)
     }
 };
-
-const logResp = (data) => {
-    try{
-        serverLog(`logResp ${data}`)
-        return data
-    } catch (e) {
-        serverLog(`error logResp: ${e}`)
-    }
-}
-
 
 const responseHandler = (data) => {
     serverLog('responseHandler');
     try {
         serverLog(`data.action: ${data.action}`);
-        if(data.action !== 'polling') progressiveActionId = data.next;
+        if(data.action !== 'polling') {
+            displayLog(`${progressiveActionId} | -> ${data.action}`);
+            progressiveActionId = data.next
+        } else {
+            if (lastProgressiveActionId !== progressiveActionId){
+                displayLog(`-> polling`);
+                progressiveActionId = lastProgressiveActionId;
+            }
+        }
         setTimeout(() => {
             doTestAction(data);
         }, 200);
     } catch (e) {
-        displayerror(e);
-        serverLog(`error on responseHandler: ${e}`);
+        displayLog(`error on responseHandler: ${e}`);
     }
 };
 
 
 const doOnLoad = () => {
     try {
-        createConsole();
-
         if(getCookieByName('app-automation-actionApi') !== undefined) {
             actionApi = getCookieByName('app-automation-actionApi')
             progressiveActionId = getCookieByName('app-automation-next');
             testId = getCookieByName('app-automation-testId');
-            displayInApiConsole(actionApi);
-            displayInIdConsole(vendor, testId)
-            displayInConsole(progressiveActionId, 'continue testing');
+            displayLog(`actionApi: ${actionApi}`);
+            displayId(`reload: ${actionApi}`);
             deleteCookies();
             lastStatus = 'ok';
             lastBody = {};
             sendRequest()
         } else {
-            displayInApiConsole('/instructions');
-            displayInIdConsole(vendor, '...')
-            displayInConsole(progressiveActionId, 'start testing');
+            displayLog('/instructions');
+            displayLog( 'start testing');
             setTimeout(() => {
                 sendInstructionsRequest();
             }, 5000);
@@ -249,6 +223,7 @@ const doOnLoad = () => {
 
 const actionsOnStart = () => {
     try{
+        createConsole();
         const script_tag = document.getElementById('automationScriptTest');
         api_host = script_tag.getAttribute("api_host");
         vendor = script_tag.getAttribute("vendor");
@@ -259,14 +234,14 @@ const actionsOnStart = () => {
 }
 
 const automation = () => {
-    serverLog('Start')
+    console.log('Start')
     if( document.readyState !== 'loading' ) {
-        serverLog( 'AUTOMATION - document is already ready, just execute code here' );
+        console.log( 'AUTOMATION - document is already ready, just execute code here' );
         actionsOnStart();
     } else {
-        serverLog("AUTOMATION - 2")
+        console.log("AUTOMATION - 2")
         document.addEventListener('DOMContentLoaded', function () {
-            serverLog('Loaded')
+            console.log('Loaded')
             actionsOnStart();
         });
     }

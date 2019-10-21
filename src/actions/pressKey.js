@@ -1,8 +1,10 @@
 import elementByPath from '../utils/elementByPath';
 import devicesKeyMap from '../utils/devices/devicesKeyMap';
+import { displayLog } from '../utils/doDisplay';
 
 const pressKey = (device, keyCode) => {
     try {
+        displayLog(`(pressKey code: ${devicesKeyMap[device][keyCode]})`);
         const logKey = {
             bubbles : false,
             cancelable : true,
