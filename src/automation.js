@@ -223,7 +223,6 @@ const doOnLoad = () => {
 };
 
 const actionsOnStart = () => {
-    pressKey('sony', 'KEY_DOWN')
     try{
         createConsole();
         //require('./utils/crossBrowser_initKeyboardEvent')

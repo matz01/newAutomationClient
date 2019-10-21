@@ -23541,8 +23541,6 @@ var automation_doOnLoad = function doOnLoad() {
 };
 
 var automation_actionsOnStart = function actionsOnStart() {
-  actions_pressKey('sony', 'KEY_DOWN');
-
   try {
     utils_createConsole(); //require('./utils/crossBrowser_initKeyboardEvent')
 
