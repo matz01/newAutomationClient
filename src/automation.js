@@ -1,4 +1,6 @@
 import 'unfetch/polyfill'
+import get from 'lodash/get';
+
 import createConsole from './utils/createConsole';
 import getCookieByName from './utils/getCookieByName';
 import {
@@ -8,8 +10,7 @@ import {
 import deleteCookies from './utils/deleteCookies';
 import { clickElement, elementIsInPage, gotoPage } from './actions';
 import pressKey from './actions/pressKey';
-import get from 'lodash/get';
-
+import keyboardEventInit from './utils/keyboardEventInit';
 
 let vendor, api_host, actionApi, testId;
 let progressiveActionId = 0;
@@ -17,7 +18,7 @@ let lastProgressiveActionId = -1;
 let lastStatus = 'waiting';
 let lastBody = {};
 
-
+// _initKeyboardEvent_type
 const serverLog = (msg) => {
     console.log(msg)
     return;
@@ -222,9 +223,10 @@ const doOnLoad = () => {
 };
 
 const actionsOnStart = () => {
+    pressKey('sony', 'KEY_DOWN')
     try{
         createConsole();
-        require('./utils/crossBrowser_initKeyboardEvent')
+        //require('./utils/crossBrowser_initKeyboardEvent')
         const script_tag = document.getElementById('automationScriptTest');
         api_host = script_tag.getAttribute("api_host");
         vendor = script_tag.getAttribute("vendor");

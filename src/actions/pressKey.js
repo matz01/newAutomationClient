@@ -1,29 +1,20 @@
 import elementByPath from '../utils/elementByPath';
+import crossBrowserKeyboardEvent from '../utils/crossBrowserKeyboardEvent';
 import devicesKeyMap from '../utils/devices/devicesKeyMap';
 import { displayLog } from '../utils/doDisplay';
 
 const pressKey = (device, keyCode) => {
     try {
-        displayLog(`(pressKey code: ${devicesKeyMap[device][keyCode]})`);
         const logKey = {
             bubbles : false,
             cancelable : true,
             keyCode : devicesKeyMap[device][keyCode]
         };
-
-
-        window.crossBrowser_initKeyboardEvent("keydown", logKey)
-        /*
-        const down = new KeyboardEvent("keydown", logKey);
-        const up = new KeyboardEvent("keyup", logKey);
-         */
-        //document.body.dispatchEvent(down);
-        //document.body.dispatchEvent(up);
-
-
+        const down = crossBrowserKeyboardEvent("keydown", logKey)
+        document.body.dispatchEvent(down);
         return 'ok';
     } catch (e) {
-        return 'ko'
+        return 'ko';
     }
 }
 

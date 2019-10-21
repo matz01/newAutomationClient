@@ -16,7 +16,7 @@ const createElement = (id, customStyle, bottomPosition) => {
 const createLogConsole = () => {
     createElement(
         'logConsole',
-        `width: ${boxWidth}em; color: #fff; height: 16em; background-color: #b300b3; right: ${baseBorderMargin}em;`,
+        `width: ${boxWidth}em; color: #fff; height: 16em; background-color: #689f38; right: ${baseBorderMargin}em;`,
         1
     );
 
