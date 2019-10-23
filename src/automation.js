@@ -17,6 +17,7 @@ let progressiveActionId = 0;
 let lastProgressiveActionId = -1;
 let lastStatus = 'waiting';
 let lastBody = {};
+let dataForBody = {};
 
 // _initKeyboardEvent_type
 const serverLog = (msg) => {
@@ -123,7 +124,7 @@ const sendRequest = () => {
     displayLog(`<- ${lastStatus}`);
     try {
         fetch(`${api_host}${actionApi}`, {
-            method: 'GET',
+            method: 'PUT',
             headers: {
                 'vendor': vendor,
                 'Content-Type': 'application/json',
@@ -225,7 +226,6 @@ const doOnLoad = () => {
 const actionsOnStart = () => {
     try{
         createConsole();
-        //require('./utils/crossBrowser_initKeyboardEvent')
         const script_tag = document.getElementById('automationScriptTest');
         api_host = script_tag.getAttribute("api_host");
         vendor = script_tag.getAttribute("vendor");

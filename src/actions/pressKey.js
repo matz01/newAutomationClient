@@ -5,6 +5,7 @@ import { displayLog } from '../utils/doDisplay';
 
 const pressKey = (device, keyCode) => {
     try {
+        displayLog(`(press key: ${keyCode} / ${devicesKeyMap[device][keyCode]})`)
         const logKey = {
             bubbles : false,
             cancelable : true,

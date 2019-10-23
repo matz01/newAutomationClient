@@ -7,17 +7,52 @@
     <style type="text/css">
         body {
             font-size: 33px;
+            height: 100%;
+            width: 100%;
+            background-color: #dedede;
             font-family: Arial;
+            color: black;
+        }
+        .button{
+            background-color: darkgray;
+            padding: 5px;
+            font-size: 1em;
+            display: inline-block;
+        }
+        .output{
+            margin-top: 10px;
+            font-size: 1em;
+            padding: 10px;
+            background-color: #ccc;
         }
     </style>
     <title>webpack starterkit</title>
     <script
         id="automationScriptTest"
-        src="./main.js"
         api_host="https://automation-smarttv.chili.com/automationServer"
         vendor="sony"
-    />
+    ></script>
+
 </head>
 <body>
+    <div id='homeCta' class='button focused'>homeCta</div>
+    <div id='gotoHomeId' class='button focused'>gotoHomeId</div>
+    <div>
+        <div id="textarea" class="output">
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var txt= document.createTextNode("start")
+            document.getElementById('textarea').appendChild(txt)
+        });
+        document.addEventListener('keydown', function(event) {
+            var txt= document.createTextNode("keyEvent")
+            document.getElementById('textarea').appendChild(txt)
+        });
+    </script>
+
 </body>
 </html>
