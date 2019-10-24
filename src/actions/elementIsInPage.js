@@ -5,10 +5,11 @@ import delay from '../utils/delay';
 import { displayLog } from '../utils/doDisplay';
 
 const elementIsInPage = (data, timeout = 10) => {
+    let iterate;
     try {
         let iteration = 0;
         return new Promise(resolve => {
-            const iterate = setInterval(() => {
+            iterate = setInterval(() => {
                 const el = elementByPath(data.element);
                 if (el) {
                     clearInterval(iterate);
@@ -22,8 +23,11 @@ const elementIsInPage = (data, timeout = 10) => {
             }, 1000);
         });
     } catch (e) {
+        clearInterval(iterate);
         displayLog(`error: ${e}`);
-        return 'ko';
+        return new Promise((resolve, reject) => {
+            resolve('ko');
+        });
     }
 };
 

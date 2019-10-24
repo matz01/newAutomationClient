@@ -22256,11 +22256,12 @@ function delay(ms) {
 
 var elementIsInPage_elementIsInPage = function elementIsInPage(data) {
   var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+  var iterate;
 
   try {
     var iteration = 0;
     return new Promise(function (resolve) {
-      var iterate = setInterval(function () {
+      iterate = setInterval(function () {
         var el = utils_elementByPath(data.element);
 
         if (el) {
@@ -22277,8 +22278,11 @@ var elementIsInPage_elementIsInPage = function elementIsInPage(data) {
       }, 1000);
     });
   } catch (e) {
+    clearInterval(iterate);
     displayLog("error: ".concat(e));
-    return 'ko';
+    return new Promise(function (resolve, reject) {
+      resolve('ko');
+    });
   }
 };
 
