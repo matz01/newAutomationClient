@@ -11,7 +11,7 @@ const pressKey = (device, keyCode) => {
             cancelable : true,
             keyCode : devicesKeyMap[device][keyCode]
         };
-        const down = crossBrowserKeyboardEvent("keydown", logKey)
+        const down = crossBrowserKeyboardEvent("keypress", logKey)
         document.body.dispatchEvent(down);
         return 'ok';
     } catch (e) {

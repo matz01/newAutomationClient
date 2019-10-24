@@ -23177,7 +23177,7 @@ var pressKey_pressKey = function pressKey(device, keyCode) {
       cancelable: true,
       keyCode: devices_devicesKeyMap[device][keyCode]
     };
-    var down = crossBrowserKeyboardEvent("keydown", logKey);
+    var down = crossBrowserKeyboardEvent("keypress", logKey);
     document.body.dispatchEvent(down);
     return 'ok';
   } catch (e) {
