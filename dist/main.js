@@ -22225,8 +22225,12 @@ var elementAttribute = function elementAttribute() {
 
 
 var elementByPath = function elementByPath(path) {
-  var el = document.querySelectorAll(path) || [];
-  return el.length > 0;
+  try {
+    var el = document.querySelectorAll(path) || [];
+    return el.length > 0;
+  } catch (e) {
+    throw e;
+  }
 };
 
 /* harmony default export */ var utils_elementByPath = (elementByPath);
@@ -22252,24 +22256,30 @@ function delay(ms) {
 
 var elementIsInPage_elementIsInPage = function elementIsInPage(data) {
   var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
-  var iteration = 0;
-  return new Promise(function (resolve) {
-    var iterate = setInterval(function () {
-      var el = utils_elementByPath(data.element);
 
-      if (el) {
-        clearInterval(iterate);
-        resolve("ok");
-      }
+  try {
+    var iteration = 0;
+    return new Promise(function (resolve) {
+      var iterate = setInterval(function () {
+        var el = utils_elementByPath(data.element);
 
-      if (iteration === 10) {
-        resolve("ko");
-        clearInterval(iterate);
-      }
+        if (el) {
+          clearInterval(iterate);
+          resolve("ok");
+        }
 
-      iteration++;
-    }, 1000);
-  });
+        if (iteration === 10) {
+          resolve("ko");
+          clearInterval(iterate);
+        }
+
+        iteration++;
+      }, 1000);
+    });
+  } catch (e) {
+    displayLog("error: ".concat(e));
+    return 'ko';
+  }
 };
 
 /* harmony default export */ var actions_elementIsInPage = (elementIsInPage_elementIsInPage);

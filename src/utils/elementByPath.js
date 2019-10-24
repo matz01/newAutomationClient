@@ -3,8 +3,12 @@ import elementAttribute from './elementAttribute';
 import { displayLog } from './doDisplay';
 
 const elementByPath = (path) => {
-    const el = document.querySelectorAll(path) || []
-    return el.length > 0
+    try {
+        const el = document.querySelectorAll(path) || []
+        return el.length > 0
+    } catch (e) {
+        throw e
+    }
 }
 
 export default elementByPath;
