@@ -1,4 +1,5 @@
 import 'unfetch/polyfill'
+import "@babel/polyfill";
 import get from 'lodash/get';
 
 import createConsole from './utils/createConsole';
