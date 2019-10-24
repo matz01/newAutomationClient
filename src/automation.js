@@ -33,7 +33,7 @@ const serverLog = (msg) => {
 }
 
 
-const doTestAction = async (data) => {
+const doTestAction = (data) => {
     serverLog('doTestAction')
     try {
         lastStatus = "ok";
@@ -55,11 +55,7 @@ const doTestAction = async (data) => {
                 break;
 
             case 'waitForElement':
-                displayLog(`search for: ${get(data, 'params.element')}`);
-                lastStatus = await elementIsInPage(data.params);
-                if(lastStatus === 'ko') deleteCookies()
-                lastBody = lastStatus === 'ko' ? {msg: 'element not found'} : lastBody;
-                sendRequest();
+                asyncWaitForElement(data);
                 break;
 
             case 'connected':
@@ -101,6 +97,22 @@ const doTestAction = async (data) => {
         console.error(e)
     }
 };
+
+const asyncWaitForElement = (data) => {
+    const doAsyncRequest = async (data) => {
+        try {
+            displayLog(`search for: ${get(data, 'params.element')}`);
+            lastStatus = await elementIsInPage(data.params);
+            if (lastStatus === 'ko') deleteCookies()
+            lastBody = lastStatus === 'ko' ? { msg: 'element not found' } : lastBody;
+            sendRequest();
+        } catch (e) {
+            sendRequest(e);
+        }
+    }
+    doAsyncRequest(data);
+}
+
 
 const sendInstructionsRequest = () => {
     displayLog('<- request to instruction');

@@ -23263,113 +23263,123 @@ var serverLog = function serverLog(msg) {
   }
 };
 
-var doTestAction =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
+var automation_doTestAction = function doTestAction(data) {
+  serverLog('doTestAction');
+
+  try {
+    lastStatus = "ok";
+    lastBody = {};
+
+    switch (data.action) {
+      case 'goToPage':
+        displayLog("url: ".concat(get_default()(data, 'params.url')));
+        document.cookie = "app-automation-actionApi=".concat(actionApi);
+        document.cookie = "app-automation-next=".concat(data.next);
+        document.cookie = "app-automation-testId=".concat(testId);
+        actions_gotoPage(data.params);
+        automation_sendRequest();
+        break;
+
+      case 'click':
+        displayLog("click on: ".concat(get_default()(data, 'params.element')));
+        actions_clickElement(data.params);
+        automation_sendRequest();
+        break;
+
+      case 'waitForElement':
+        automation_asyncWaitForElement(data);
+        break;
+
+      case 'connected':
+        displayLog('connected, no action');
+        automation_sendRequest();
+        break;
+
+      case 'keyDown':
+        displayLog("key code: ".concat(get_default()(data.params, 'key')));
+        actions_pressKey(vendor, get_default()(data.params, 'key'));
+        automation_sendRequest();
+        break;
+
+      case "polling":
+        setTimeout(function () {
+          automation_sendRequest();
+        }, 1000);
+        break;
+
+      case "finish":
+        utils_deleteCookies();
+        displayLog('test finish. Reload in 5min');
+        setTimeout(function () {
+          actions_gotoPage({
+            url: '/'
+          });
+        }, 300000);
+        break;
+
+      default:
+        displayLog("ops..., not handled!");
+        utils_deleteCookies();
+        break;
+    }
+  } catch (e) {
+    displayLog("error doTestAction: ".concat(e));
+    utils_deleteCookies();
+    lastStatus = "ko";
+    lastBody = {
+      msg: e
+    };
+    automation_sendRequest();
+    console.error(e);
+  }
+};
+
+var automation_asyncWaitForElement = function asyncWaitForElement(data) {
+  var doAsyncRequest =
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(data) {
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            serverLog('doTestAction');
-            _context.prev = 1;
-            lastStatus = "ok";
-            lastBody = {};
-            _context.t0 = data.action;
-            _context.next = _context.t0 === 'goToPage' ? 7 : _context.t0 === 'click' ? 14 : _context.t0 === 'waitForElement' ? 18 : _context.t0 === 'connected' ? 26 : _context.t0 === 'keyDown' ? 29 : _context.t0 === "polling" ? 33 : _context.t0 === "finish" ? 35 : 39;
-            break;
+  function () {
+    var _ref = _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee(data) {
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              displayLog("search for: ".concat(get_default()(data, 'params.element')));
+              _context.next = 4;
+              return actions_elementIsInPage(data.params);
 
-          case 7:
-            displayLog("url: ".concat(get_default()(data, 'params.url')));
-            document.cookie = "app-automation-actionApi=".concat(actionApi);
-            document.cookie = "app-automation-next=".concat(data.next);
-            document.cookie = "app-automation-testId=".concat(testId);
-            actions_gotoPage(data.params);
-            automation_sendRequest();
-            return _context.abrupt("break", 42);
-
-          case 14:
-            displayLog("click on: ".concat(get_default()(data, 'params.element')));
-            actions_clickElement(data.params);
-            automation_sendRequest();
-            return _context.abrupt("break", 42);
-
-          case 18:
-            displayLog("search for: ".concat(get_default()(data, 'params.element')));
-            _context.next = 21;
-            return actions_elementIsInPage(data.params);
-
-          case 21:
-            lastStatus = _context.sent;
-            if (lastStatus === 'ko') utils_deleteCookies();
-            lastBody = lastStatus === 'ko' ? {
-              msg: 'element not found'
-            } : lastBody;
-            automation_sendRequest();
-            return _context.abrupt("break", 42);
-
-          case 26:
-            displayLog('connected, no action');
-            automation_sendRequest();
-            return _context.abrupt("break", 42);
-
-          case 29:
-            displayLog("key code: ".concat(get_default()(data.params, 'key')));
-            actions_pressKey(vendor, get_default()(data.params, 'key'));
-            automation_sendRequest();
-            return _context.abrupt("break", 42);
-
-          case 33:
-            setTimeout(function () {
+            case 4:
+              lastStatus = _context.sent;
+              if (lastStatus === 'ko') utils_deleteCookies();
+              lastBody = lastStatus === 'ko' ? {
+                msg: 'element not found'
+              } : lastBody;
               automation_sendRequest();
-            }, 1000);
-            return _context.abrupt("break", 42);
+              _context.next = 13;
+              break;
 
-          case 35:
-            utils_deleteCookies();
-            displayLog('test finish. Reload in 5min');
-            setTimeout(function () {
-              actions_gotoPage({
-                url: '/'
-              });
-            }, 300000);
-            return _context.abrupt("break", 42);
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](0);
+              automation_sendRequest(_context.t0);
 
-          case 39:
-            displayLog("ops..., not handled!");
-            utils_deleteCookies();
-            return _context.abrupt("break", 42);
-
-          case 42:
-            _context.next = 52;
-            break;
-
-          case 44:
-            _context.prev = 44;
-            _context.t1 = _context["catch"](1);
-            displayLog("error doTestAction: ".concat(_context.t1));
-            utils_deleteCookies();
-            lastStatus = "ko";
-            lastBody = {
-              msg: _context.t1
-            };
-            automation_sendRequest();
-            console.error(_context.t1);
-
-          case 52:
-          case "end":
-            return _context.stop();
+            case 13:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    }, _callee, null, [[1, 44]]);
-  }));
+      }, _callee, null, [[0, 10]]);
+    }));
 
-  return function doTestAction(_x) {
-    return _ref.apply(this, arguments);
-  };
-}();
+    return function doAsyncRequest(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  doAsyncRequest(data);
+};
 
 var automation_sendInstructionsRequest = function sendInstructionsRequest() {
   displayLog('<- request to instruction');
@@ -23463,7 +23473,7 @@ var automation_responseHandler = function responseHandler(data) {
     }
 
     setTimeout(function () {
-      doTestAction(data);
+      automation_doTestAction(data);
     }, 200);
   } catch (e) {
     displayLog("error on responseHandler: ".concat(e));
