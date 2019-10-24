@@ -22262,7 +22262,15 @@ var elementIsInPage_elementIsInPage = function elementIsInPage(data) {
     var iteration = 0;
     return new Promise(function (resolve) {
       iterate = setInterval(function () {
-        var el = utils_elementByPath(data.element);
+        try {
+          var _el = utils_elementByPath(data.element);
+        } catch (e) {
+          clearInterval(iterate);
+          displayLog("error: ".concat(e));
+          return new Promise(function (resolve, reject) {
+            resolve('ko');
+          });
+        }
 
         if (el) {
           clearInterval(iterate);

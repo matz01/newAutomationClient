@@ -10,7 +10,15 @@ const elementIsInPage = (data, timeout = 10) => {
         let iteration = 0;
         return new Promise(resolve => {
             iterate = setInterval(() => {
-                const el = elementByPath(data.element);
+                try {
+                    const el = elementByPath(data.element);
+                } catch (e) {
+                    clearInterval(iterate);
+                    displayLog(`error: ${e}`);
+                    return new Promise((resolve, reject) => {
+                        resolve('ko');
+                    });
+                }
                 if (el) {
                     clearInterval(iterate);
                     resolve("ok");
