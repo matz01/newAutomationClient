@@ -12,16 +12,16 @@ const elementIsInPage = (data, timeout = 10) => {
             iterate = setInterval(() => {
                 try {
                     const el = elementByPath(data.element);
+                    if (el) {
+                        clearInterval(iterate);
+                        resolve("ok");
+                    }
                 } catch (e) {
                     clearInterval(iterate);
                     displayLog(`error: ${e}`);
                     return new Promise((resolve, reject) => {
                         resolve('ko');
                     });
-                }
-                if (el) {
-                    clearInterval(iterate);
-                    resolve("ok");
                 }
                 if (iteration === 10) {
                     resolve("ko");
