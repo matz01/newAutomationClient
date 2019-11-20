@@ -26,7 +26,9 @@ module.exports = {
         ],
     },
     devServer: {
-        inline: true
+        inline: true,
+        host: '192.168.12.13',
+        https: true,
     },
     resolve: {
         modules: [
