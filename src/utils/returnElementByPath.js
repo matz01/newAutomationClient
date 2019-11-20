@@ -1,14 +1,11 @@
+import getElementStrategy from '../utils/getElementStrategy';
+
 const returnElementByPath = (path) => {
     try {
-        let el = undefined;
-        if (path.search(/\[/g) === -1) {
-            el = document.querySelectorAll(`*[id=${path}]`) || [];
-        } else {
-            el = document.querySelectorAll(path) || [];
-        }
-        return el[0]
+        const elementList = getElementStrategy(path);
+        return elementList[0];
     } catch (e) {
-        throw e
+        throw e;
     }
 }
 

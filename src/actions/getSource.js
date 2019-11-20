@@ -1,13 +1,12 @@
 import get from 'lodash/get';
-import { displayLog } from '../utils/doDisplay';
+import returnElementByPath from '../utils/returnElementByPath';
 
 const getSource = (data) => {
     try {
-        const el = document.querySelectorAll(data.element);
-        console.log(data.element, el)
-        return get(el, '0.outerHTML');
+        const el = returnElementByPath(data.element);
+        return get(el, 'outerHTML');
     } catch (e) {
-        throw e
+        throw e;
     }
 };
 

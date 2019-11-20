@@ -1,10 +1,9 @@
-import get from 'lodash/get';
-import { displayLog } from '../utils/doDisplay';
+import getElementStrategy from '../utils/getElementStrategy';
 
 const countElement = (data) => {
     try {
-        const el = document.querySelectorAll(data.element);
-        return el.length;
+        const elementList = getElementStrategy(data.element);
+        return elementList.length;
     } catch (e) {
         throw e
     }
