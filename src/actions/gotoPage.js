@@ -1,10 +1,13 @@
+import { displayLog } from '../utils/doDisplay';
+
 const gotoPage = (data) => {
     try {
-        window.location.href = data.url
+        displayLog("##", `href: ${window.location.href}`)
+        window.location.hash = data.url;
         return 'ok';
     } catch (e) {
-        return 'ko'
+        return 'ko';
     }
-}
+};
 
 export default gotoPage;

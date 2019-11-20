@@ -1,13 +1,13 @@
 import { isEmpty, get } from 'lodash';
-import elementByPath from '../utils/elementByPath';
+import checkElementByPath from '../utils/checkElementByPath';
 
 const clickElement = (data) => {
     try {
-        const el = elementByPath(data.element)
+        const el = checkElementByPath(data.element)
         el.click()
         return 'ok';
     } catch (e) {
-        return 'ko'
+        throw e
     }
 }
 
