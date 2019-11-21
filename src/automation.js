@@ -102,7 +102,7 @@ const doTestAction = (data) => {
             case 'polling':
                 setTimeout(() => {
                     sendRequest();
-                }, 300);
+                }, 100);
                 break;
 
             case 'finish':
@@ -230,7 +230,7 @@ const responseHandler = (data) => {
         }
         setTimeout(() => {
             doTestAction(data);
-        }, 200);
+        }, 100);
     } catch (e) {
         displayLog('!!', `error on responseHandler: ${parseError(e)}`);
     }
@@ -267,7 +267,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.0.1');
+        displayLog('##', 'lib version: 1.0.2');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
