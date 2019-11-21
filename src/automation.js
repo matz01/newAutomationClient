@@ -102,7 +102,7 @@ const doTestAction = (data) => {
             case 'polling':
                 setTimeout(() => {
                     sendRequest();
-                }, 1000);
+                }, 300);
                 break;
 
             case 'finish':
