@@ -7,9 +7,9 @@ const clickElement = (data) => {
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
-        const isClickable = el === document.elementFromPoint(xPos, yPos);
-        console.log( "::::::::::: isClickable:", isClickable)
-        if(!isClickable) return 'ko';
+        //const isClickable = el === document.elementFromPoint(xPos, yPos);
+        //console.log( "::::::::::: isClickable:", isClickable)
+        //if(!isClickable) return 'ko';
         document.elementFromPoint(xPos, yPos).click();
         simulateMouseover(el)
         return 'ok';
