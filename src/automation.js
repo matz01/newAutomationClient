@@ -248,14 +248,14 @@ const instructionResponseHandler = (data) => {
 const responseHandler = (data) => {
     try {
         bodyResponse = null;
+        if (progressiveActionId === data.next && data.next !== 0) {
+            clearAllData();
+            displayLog('!!', 'server is not updating action')
+            return;
+        }
         if (data.action !== 'polling') {
             displayLog('##', `${progressiveActionId}`);
             displayLog('<-', `${data.action}`);
-            if (progressiveActionId === data.next && data.next !== 0) {
-                clearAllData();
-                displayLog('!!', 'server is not updating action')
-                return;
-            }
             progressiveActionId = data.next;
         } else {
             displayLog('<-', 'polling');
@@ -299,7 +299,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.1.8');
+        displayLog('##', 'lib version: 1.1.9');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
