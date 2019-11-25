@@ -3,13 +3,9 @@ import returnElementByPath from '../utils/returnElementByPath';
 const clickElement = (data) => {
     try {
         const el = returnElementByPath(data.element)
-
-
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
-
-
         console.log(xPos, yPos)
         console.log(document.elementFromPoint(xPos, yPos))
         document.elementFromPoint(xPos, yPos).click();

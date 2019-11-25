@@ -12,7 +12,7 @@ import {
 } from './utils/doDisplay';
 import deleteCookies from './utils/deleteCookies';
 import {
-    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible
+    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData
 } from './actions';
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
@@ -60,6 +60,20 @@ const doTestAction = (data) => {
                 displayLog('{}', `click on: ${get(data, 'params.element')}`);
                 clickElement(data.params);
                 sendRequest();
+                break;
+
+            case 'clearDataAndReload':
+                const automationEnabledCookie = getCookieByName('app-automation-enabled');
+                clearAllData()
+                document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
+                document.cookie = `app-automation-actionApi=${actionApi}`;
+                document.cookie = `app-automation-next=${data.next}`;
+                document.cookie = `app-automation-testId=${testId}`;
+                reloadPage();
+                break;
+
+            case 'reloadPage':
+                reloadPage();
                 break;
 
             case 'waitForElement':
@@ -134,13 +148,17 @@ const reloadinInMinutes = (min) => {
                 iterate(progressive - 1);
             } else {
                 displayLog('##', 'cookies deleted');
-                window.location.replace(`./index.html?refresh=${Date.now()}#/`);
+                reloadPage();
             }
         }, 60000);
     };
     displayLog('##', 'test finish');
     iterate(min);
 };
+
+const reloadPage = () => {
+    window.location.replace(`./index.html?refresh=${Date.now()}#/`);
+}
 
 const asyncWaitForElement = (data, isVisible) => {
     const doAsyncRequest = async () => {
@@ -267,7 +285,8 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.0.4');
+        const pJson = require('../package.json');
+        displayLog('##', `lib version: ${pJson.version}`);
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
