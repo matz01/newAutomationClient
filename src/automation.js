@@ -286,8 +286,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        const pJson = require('../package.json');
-        displayLog('##', `lib version: ${pJson.version}`);
+        displayLog('##', 'lib version: 1.1.1');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
