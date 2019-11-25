@@ -70,7 +70,7 @@ const doTestAction = (data) => {
                 document.cookie = `app-automation-actionApi=${actionApi}`;
                 document.cookie = `app-automation-next=${data.next}`;
                 document.cookie = `app-automation-testId=${testId}`;
-                reloadPage();
+                setTimeout(reloadPage, 1000);
                 break;
 
             case 'reloadPage':
@@ -286,7 +286,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.1.1');
+        displayLog('##', 'lib version: 1.1.2');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
