@@ -12,7 +12,6 @@ const colors = {
 }
 const baseStyle = `font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
 
-const pJson = require('../../package.json')
 
 const createElement = (id, customStyle, bottomPosition) => {
     const node = document.createElement('div');
@@ -59,9 +58,9 @@ const toggleMainConsole = (show) => {
 const toggleMinimizedConsole = (show) => {
     document.getElementById('minimizedConsole').style.display = show ? 'block' : 'none';
     if(show === true){
-        document.cookie = `app-automation-minimizedConsoleDisplay-${pJson.version}=${show}`;
+        document.cookie = `app-automation-minimizedConsoleDisplay=${show}`;
     } else {
-        document.cookie = `app-automation-minimizedConsoleDisplay-${pJson.version}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+        document.cookie = `app-automation-minimizedConsoleDisplay= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
     }
 };
 

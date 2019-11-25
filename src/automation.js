@@ -18,7 +18,6 @@ import pressKey from './actions/pressKey';
 import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
 
-const pJson = require('../package.json')
 
 let vendor;
     let apiHost;
@@ -27,6 +26,8 @@ let vendor;
 let progressiveActionId = 0;
 let lastStatus = 'waiting';
 let bodyResponse = null;
+let lastNext = 0;
+let lastAction = '';
 
 const parseError = (error) => {
     try {
@@ -51,9 +52,9 @@ const doTestAction = (data) => {
 
             case 'goToPage':
                 displayLog('{}', `url: ${get(data, 'params.url')}`);
-                document.cookie = `app-automation-actionApi-${pJson.version}=${actionApi}`;
-                document.cookie = `app-automation-next-${pJson.version}=${data.next}`;
-                document.cookie = `app-automation-testId-${pJson.version}=${testId}`;
+                document.cookie = `app-automation-actionApi=${actionApi}`;
+                document.cookie = `app-automation-next=${data.next}`;
+                document.cookie = `app-automation-testId=${testId}`;
                 gotoPage(data.params);
                 sendRequest();
                 break;
@@ -69,14 +70,14 @@ const doTestAction = (data) => {
                 const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
                 clearAllData()
                 document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
-                document.cookie = `app-automation-actionApi-${pJson.version}=${actionApi}`;
-                document.cookie = `app-automation-next-${pJson.version}=${data.next}`;
-                document.cookie = `app-automation-testId-${pJson.version}=${testId}`;
+                document.cookie = `app-automation-actionApi=${actionApi}`;
+                document.cookie = `app-automation-next=${data.next}`;
+                document.cookie = `app-automation-testId=${testId}`;
                 displayLog('##', 'cookies deleted');
                 displayLog('##', `next: ${data.next}`)
                 setTimeout(()=>{
                     reloadPage()
-                }, 3000);
+                }, 5000);
                 break;
 
             case 'reloadPage':
@@ -250,6 +251,11 @@ const responseHandler = (data) => {
         if (data.action !== 'polling') {
             displayLog('##', `${progressiveActionId}`);
             displayLog('<-', `${data.action}`);
+            if (progressiveActionId === data.next && data.action !== 'polling') {
+                clearAllData();
+                displayLog('!!', 'server is not updating action')
+                return;
+            }
             progressiveActionId = data.next;
         } else {
             displayLog('<-', 'polling');
@@ -265,14 +271,14 @@ const responseHandler = (data) => {
 
 const doOnLoad = () => {
     try {
-        if (getCookieByName(`app-automation-actionApi-${pJson.version}`) !== undefined) {
-            actionApi = getCookieByName(`app-automation-actionApi-${pJson.version}`);
-            progressiveActionId = getCookieByName(`app-automation-next-${pJson.version}`);
-            if (getCookieByName(`app-automation-minimizedConsoleDisplay-${pJson.version}`) !== undefined ){
+        if (getCookieByName(`app-automation-actionApi`) !== undefined) {
+            actionApi = getCookieByName(`app-automation-actionApi`);
+            progressiveActionId = getCookieByName(`app-automation-next`);
+            if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
                 toggleMinimizedConsole(true)
                 toggleMainConsole(false)
             }
-            testId = getCookieByName(`app-automation-testId-${pJson.version}`);
+            testId = getCookieByName(`app-automation-testId`);
             displayLog('##', 'data in cookies!');
             displayLog('##', `actionApi: ${actionApi}`);
             displayId(`reload: ${actionApi}`);
@@ -293,7 +299,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.1.6');
+        displayLog('##', 'lib version: 1.1.7');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
