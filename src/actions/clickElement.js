@@ -3,11 +3,13 @@ import returnElementByPath from '../utils/returnElementByPath';
 const clickElement = (data) => {
     try {
         const el = returnElementByPath(data.element)
+        if (el === undefined) return 'ko';
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
-        console.log(xPos, yPos)
-        console.log(document.elementFromPoint(xPos, yPos))
+        const isClickable = el === document.elementFromPoint(xPos, yPos);
+        console.log( "::::::::::: isClickable:", isClickable)
+        if(!isClickable) return 'ko';
         document.elementFromPoint(xPos, yPos).click();
         simulateMouseover(el)
         return 'ok';

@@ -58,7 +58,8 @@ const doTestAction = (data) => {
 
             case 'click':
                 displayLog('{}', `click on: ${get(data, 'params.element')}`);
-                clickElement(data.params);
+                lastStatus = clickElement(data.params);
+                if (lastStatus === 'ko') displayLog('!!', 'element non clickable')
                 sendRequest();
                 break;
 
