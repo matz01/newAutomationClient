@@ -18,6 +18,8 @@ import pressKey from './actions/pressKey';
 import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
 
+const pJson = require('../package.json')
+
 let vendor;
     let apiHost;
     let actionApi;
@@ -49,9 +51,9 @@ const doTestAction = (data) => {
 
             case 'goToPage':
                 displayLog('{}', `url: ${get(data, 'params.url')}`);
-                document.cookie = `app-automation-actionApi=${actionApi}`;
-                document.cookie = `app-automation-next=${data.next}`;
-                document.cookie = `app-automation-testId=${testId}`;
+                document.cookie = `app-automation-actionApi-${pJson.version}=${actionApi}`;
+                document.cookie = `app-automation-next-${pJson.version}=${data.next}`;
+                document.cookie = `app-automation-testId-${pJson.version}=${testId}`;
                 gotoPage(data.params);
                 sendRequest();
                 break;
@@ -64,12 +66,12 @@ const doTestAction = (data) => {
                 break;
 
             case 'clearDataAndReload':
-                const automationEnabledCookie = getCookieByName('app-automation-enabled');
+                const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
                 clearAllData()
                 document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
-                document.cookie = `app-automation-actionApi=${actionApi}`;
-                document.cookie = `app-automation-next=${data.next}`;
-                document.cookie = `app-automation-testId=${testId}`;
+                document.cookie = `app-automation-actionApi-${pJson.version}=${actionApi}`;
+                document.cookie = `app-automation-next-${pJson.version}=${data.next}`;
+                document.cookie = `app-automation-testId-${pJson.version}=${testId}`;
                 displayLog('##', 'cookies deleted');
                 displayLog('##', `next: ${data.next}`)
                 setTimeout(()=>{
@@ -263,14 +265,14 @@ const responseHandler = (data) => {
 
 const doOnLoad = () => {
     try {
-        if (getCookieByName('app-automation-actionApi') !== undefined) {
-            actionApi = getCookieByName('app-automation-actionApi');
-            progressiveActionId = getCookieByName('app-automation-next');
-            if (getCookieByName('app-automation-minimizedConsoleDisplay') !== undefined ){
+        if (getCookieByName(`app-automation-actionApi-${pJson.version}`) !== undefined) {
+            actionApi = getCookieByName(`app-automation-actionApi-${pJson.version}`);
+            progressiveActionId = getCookieByName(`app-automation-next-${pJson.version}`);
+            if (getCookieByName(`app-automation-minimizedConsoleDisplay-${pJson.version}`) !== undefined ){
                 toggleMinimizedConsole(true)
                 toggleMainConsole(false)
             }
-            testId = getCookieByName('app-automation-testId');
+            testId = getCookieByName(`app-automation-testId-${pJson.version}`);
             displayLog('##', 'data in cookies!');
             displayLog('##', `actionApi: ${actionApi}`);
             displayId(`reload: ${actionApi}`);
@@ -291,7 +293,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.1.5');
+        displayLog('##', 'lib version: 1.1.6');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;

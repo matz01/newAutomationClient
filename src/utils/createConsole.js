@@ -12,6 +12,8 @@ const colors = {
 }
 const baseStyle = `font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
 
+const pJson = require('../../package.json')
+
 const createElement = (id, customStyle, bottomPosition) => {
     const node = document.createElement('div');
     node.setAttribute('id', id);
@@ -44,7 +46,7 @@ const createIdConsole = () => {
 const createMinimizedConsole = () => {
     createElement(
         'minimizedConsole',
-        `width: 2em; color: #fff; font-weight: bold; background-color: #689f38; right: ${baseBorderMargin}em;`,
+        `width: 2em; color: #fff; font-weight: bold; background-color: ${colors.blue}; right: ${baseBorderMargin}em;`,
         0
     );
 }
@@ -57,9 +59,9 @@ const toggleMainConsole = (show) => {
 const toggleMinimizedConsole = (show) => {
     document.getElementById('minimizedConsole').style.display = show ? 'block' : 'none';
     if(show === true){
-        document.cookie = `app-automation-minimizedConsoleDisplay=${show}`;
+        document.cookie = `app-automation-minimizedConsoleDisplay-${pJson.version}=${show}`;
     } else {
-        document.cookie = 'app-automation-minimizedConsoleDisplay= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie = `app-automation-minimizedConsoleDisplay-${pJson.version}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
     }
 };
 
