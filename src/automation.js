@@ -127,6 +127,7 @@ const doTestAction = (data) => {
             case 'finish':
                 toggleMainConsole(true);
                 toggleMinimizedConsole(false)
+                setConsoleColor('green');
                 reloadinInMinutes(5);
                 break;
 

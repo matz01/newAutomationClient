@@ -8,6 +8,7 @@ const colors = {
     green: '#689f38',
     purple: '#454d66',
     red: '#800020',
+    blue: '#014666'
 }
 const baseStyle = `font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
 
@@ -22,7 +23,7 @@ const createElement = (id, customStyle, bottomPosition) => {
 const createLogConsole = () => {
     createElement(
         'logConsole',
-        `width: ${boxWidth}em; color: #fff; height: 16em; background-color: #689f38; right: ${baseBorderMargin}em;`,
+        `width: ${boxWidth}em; color: #fff; height: 16em; background-color: ${colors.blue}; right: ${baseBorderMargin}em;`,
         1
     );
 
