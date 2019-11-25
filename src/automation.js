@@ -68,16 +68,22 @@ const doTestAction = (data) => {
 
             case 'clearDataAndReload':
                 const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
-                clearAllData()
-                document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
-                document.cookie = `app-automation-actionApi=${actionApi}`;
-                document.cookie = `app-automation-next=${data.next}`;
-                document.cookie = `app-automation-testId=${testId}`;
-                displayLog('##', 'cookies deleted');
-                displayLog('##', `next: ${data.next}`)
-                setTimeout(()=>{
-                    reloadPage()
-                }, 5000);
+                clearAllData();
+                if(getCookieByName(`app-automation-next`) === data.next) {
+                    displayLog('##', 'cookies deleted');
+                    displayLog('!!', 'server is not updating action')
+                } else {
+                    document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
+                    document.cookie = `app-automation-actionApi=${actionApi}`;
+                    document.cookie = `app-automation-next=${data.next}`;
+                    document.cookie = `app-automation-testId=${testId}`;
+                    displayLog('##', 'cookies deleted');
+                    displayLog('##', `next: ${data.next}`)
+                    setTimeout(()=>{
+                        reloadPage()
+                    }, 5000);
+                }
+
                 break;
 
             case 'reloadPage':
@@ -248,11 +254,6 @@ const instructionResponseHandler = (data) => {
 const responseHandler = (data) => {
     try {
         bodyResponse = null;
-        if (progressiveActionId === data.next && data.next !== 0) {
-            clearAllData();
-            displayLog('!!', 'server is not updating action')
-            return;
-        }
         if (data.action !== 'polling') {
             displayLog('##', `${progressiveActionId}`);
             displayLog('<-', `${data.action}`);
@@ -299,7 +300,7 @@ const doOnLoad = () => {
 const automation = () => {
     try {
         createConsole();
-        displayLog('##', 'lib version: 1.1.9');
+        displayLog('##', 'lib version: 1.1.10');
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;
