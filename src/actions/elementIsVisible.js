@@ -2,7 +2,7 @@ import checkElementByPath from '../utils/checkElementByPath';
 import { displayLog } from '../utils/doDisplay';
 import returnElementByPath from '../utils/returnElementByPath';
 
-const isInWindowAndVisible = (elem) => {
+export const isInWindowAndVisible = (elem) => {
     const style = getComputedStyle(elem);
     if (style.display === 'none') return false;
     if (style.visibility !== 'visible') return false;

@@ -10,7 +10,7 @@ const colors = {
     red: '#800020',
     blue: '#014666'
 }
-const baseStyle = `font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
+const baseStyle = `pointer-events: none; font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
 
 
 const createElement = (id, customStyle, bottomPosition) => {

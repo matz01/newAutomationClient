@@ -1,4 +1,5 @@
 import returnElementByPath from '../utils/returnElementByPath';
+import {isInWindowAndVisible} from '../actions/elementIsVisible';
 
 const clickElement = (data) => {
     try {
@@ -7,14 +8,13 @@ const clickElement = (data) => {
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
-        //const isClickable = el === document.elementFromPoint(xPos, yPos);
-        //console.log( "::::::::::: isClickable:", isClickable)
-        //if(!isClickable) return 'ko';
+        const isClickable = isInWindowAndVisible(el);
+        if(!isClickable) return 'ko';
         document.elementFromPoint(xPos, yPos).click();
         simulateMouseover(el)
         return 'ok';
     } catch (e) {
-        throw e
+        throw e;
     }
 }
 

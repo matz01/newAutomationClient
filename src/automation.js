@@ -41,7 +41,6 @@ const resetAutomation = () => {
     displayLog('!!', 'server is not updating action');
     lastStatus = 'ko';
     sendRequest();
-    reloadInInMinutes(3);
 }
 
 const doTestAction = (data) => {
