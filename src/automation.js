@@ -11,7 +11,7 @@ import {
 } from './utils/doDisplay';
 import deleteCookies from './utils/deleteCookies';
 import {
-    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData, getText
+    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData, getText, elementIsNotInPage
 } from './actions';
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
@@ -97,6 +97,10 @@ const doTestAction = (data) => {
 
             case 'waitForElement':
                 asyncWaitForElement(data);
+                break;
+
+            case 'waitForElementNotInPage':
+                asyncWaitForElementNotInPage(data);
                 break;
 
             case 'waitForElementIsVisible':
@@ -207,6 +211,22 @@ const asyncWaitForElement = (data, isVisible) => {
     doAsyncRequest(data);
 };
 
+const asyncWaitForElementNotInPage = (data) => {
+    const doAsyncRequest = async () => {
+        try {
+            displayLog('{}', `search for: ${get(data, 'params.element')}`);
+            lastStatus = await elementIsNotInPage(data.params);
+            if (lastStatus === 'ko') {
+                deleteCookies();
+                displayLog('!!', 'elementNotFound')
+            }
+            sendRequest();
+        } catch (e) {
+            throw e;
+        }
+    };
+    doAsyncRequest(data);
+};
 
 const sendInstructionsRequest = async () => {
     displayLog('->', 'request to instruction');
