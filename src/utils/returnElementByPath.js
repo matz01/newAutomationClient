@@ -2,8 +2,8 @@ import getElementStrategy from '../utils/getElementStrategy';
 
 const returnElementByPath = (path) => {
     try {
-        const elementList = getElementStrategy(path);
-        return elementList[0];
+        const el = getElementStrategy(path);
+        return el;
     } catch (e) {
         throw e;
     }
