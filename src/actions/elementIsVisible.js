@@ -34,7 +34,7 @@ const elementIsVisible = (data, timeout = 20) => {
             iterate = setInterval(() => {
                 try {
                     const el = returnElementByPath(data.element);
-                    if (el) {
+                    if (el !== undefined) {
                         if(isInWindowAndVisible(el)){
                             clearInterval(iterate);
                             resolve("ok");
