@@ -1,5 +1,7 @@
 import { setConsoleColor, toggleMainConsole, toggleMinimizedConsole } from './createConsole';
 
+let error = false;
+
 export const displayId = (api) => {
     document.getElementById('idConsole').innerText = `${api}`;
 };
@@ -9,6 +11,11 @@ export const displayLog = (type, msg) => {
         toggleMainConsole(true);
         toggleMinimizedConsole(false)
         setConsoleColor('red');
+        error = true;
+    }
+
+    if (type === '<>' && !error){
+        setConsoleColor('green');
     }
 
     if (document.getElementById('logConsole__inner').childElementCount >= 12) {

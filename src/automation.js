@@ -1,6 +1,5 @@
 import get from 'lodash/get';
 import createConsole, {
-    setConsoleColor,
     toggleMainConsole,
     toggleMinimizedConsole
 } from './utils/createConsole';
@@ -12,7 +11,7 @@ import {
 } from './utils/doDisplay';
 import deleteCookies from './utils/deleteCookies';
 import {
-    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData
+    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData, getText
 } from './actions';
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
@@ -24,10 +23,10 @@ let vendor;
     let actionApi;
     let testId;
 let progressiveActionId = 0;
+let nextAfterReload = undefined;
+let pollingIteration = 0;
 let lastStatus = 'waiting';
 let bodyResponse = null;
-let lastNext = 0;
-let lastAction = '';
 
 const parseError = (error) => {
     try {
@@ -36,6 +35,14 @@ const parseError = (error) => {
         return (error); // error in the above string (in this case, yes)!
     }
 };
+
+const resetAutomation = () => {
+    displayLog('##', 'cookies deleted');
+    displayLog('!!', 'server is not updating action');
+    lastStatus = 'ko';
+    sendRequest();
+    reloadInInMinutes(3);
+}
 
 const doTestAction = (data) => {
     try {
@@ -67,23 +74,22 @@ const doTestAction = (data) => {
                 break;
 
             case 'clearDataAndReload':
+                if(nextAfterReload === data.next) {
+                    resetAutomation();
+                    break;
+                }
+                nextAfterReload = undefined;
                 const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
                 clearAllData();
-                if(getCookieByName(`app-automation-next`) === data.next) {
-                    displayLog('##', 'cookies deleted');
-                    displayLog('!!', 'server is not updating action')
-                } else {
-                    document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
-                    document.cookie = `app-automation-actionApi=${actionApi}`;
-                    document.cookie = `app-automation-next=${data.next}`;
-                    document.cookie = `app-automation-testId=${testId}`;
-                    displayLog('##', 'cookies deleted');
-                    displayLog('##', `next: ${data.next}`)
-                    setTimeout(()=>{
-                        reloadPage()
-                    }, 5000);
-                }
-
+                document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
+                document.cookie = `app-automation-actionApi=${actionApi}`;
+                document.cookie = `app-automation-next=${data.next}`;
+                document.cookie = `app-automation-testId=${testId}`;
+                displayLog('##', 'cookies deleted');
+                displayLog('##', `next: ${data.next}`)
+                setTimeout(()=>{
+                    reloadPage()
+                }, 5000);
                 break;
 
             case 'reloadPage':
@@ -99,8 +105,14 @@ const doTestAction = (data) => {
                 break;
 
             case 'getSource':
-                const resp = getSource(data.params);
-                bodyResponse = { response: resp };
+                const sourceResp = getSource(data.params);
+                bodyResponse = { response: sourceResp };
+                sendRequest();
+                break;
+
+            case 'getText':
+                const textResp = getText(data.params);
+                bodyResponse = { response: textResp };
                 sendRequest();
                 break;
 
@@ -128,16 +140,21 @@ const doTestAction = (data) => {
                 break;
 
             case 'polling':
+                if (pollingIteration === 10){
+                    resetAutomation();
+                    break;
+                }
+                pollingIteration ++;
                 setTimeout(() => {
                     sendRequest();
                 }, 100);
                 break;
 
             case 'finish':
+                displayLog('<>', 'Test completed')
                 toggleMainConsole(true);
                 toggleMinimizedConsole(false)
-                setConsoleColor('green');
-                reloadinInMinutes(5);
+                reloadInInMinutes(3);
                 break;
 
             default:
@@ -154,7 +171,7 @@ const doTestAction = (data) => {
     }
 };
 
-const reloadinInMinutes = (min) => {
+const reloadInInMinutes = (min) => {
     deleteCookies();
     const iterate = (progressive) => {
         displayLog('##', `Reload in ${progressive} min`);
@@ -167,7 +184,6 @@ const reloadinInMinutes = (min) => {
             }
         }, 60000);
     };
-    displayLog('##', 'test finish');
     iterate(min);
 };
 
@@ -258,6 +274,7 @@ const responseHandler = (data) => {
             displayLog('##', `${progressiveActionId}`);
             displayLog('<-', `${data.action}`);
             progressiveActionId = data.next;
+            pollingIteration = 0;
         } else {
             displayLog('<-', 'polling');
         }
@@ -274,7 +291,7 @@ const doOnLoad = () => {
     try {
         if (getCookieByName(`app-automation-actionApi`) !== undefined) {
             actionApi = getCookieByName(`app-automation-actionApi`);
-            progressiveActionId = getCookieByName(`app-automation-next`);
+            nextAfterReload = progressiveActionId = getCookieByName(`app-automation-next`);
             if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
                 toggleMinimizedConsole(true)
                 toggleMainConsole(false)
@@ -299,8 +316,9 @@ const doOnLoad = () => {
 
 const automation = () => {
     try {
+        const pJson = require('../package.json');
         createConsole();
-        displayLog('##', 'lib version: 1.1.10');
+        displayLog('##', `lib version: ${pJson.version}`);
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");
         apiHost = `${API_HOST}`;

@@ -5,6 +5,7 @@ import gotoPage from './actions/gotoPage';
 import getSource from './actions/getSource';
 import countElements from './actions/countElements';
 import clearAllData from './actions/clearAllData';
+import getText from './actions/getText';
 
 export {
     elementIsInPage,
@@ -13,5 +14,6 @@ export {
     gotoPage,
     getSource,
     countElements,
-    clearAllData
+    clearAllData,
+    getText
 }
