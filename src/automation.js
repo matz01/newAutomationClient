@@ -140,7 +140,7 @@ const doTestAction = (data) => {
                 break;
 
             case 'polling':
-                if (pollingIteration === 10){
+                if (pollingIteration === 60){
                     resetAutomation();
                     break;
                 }
