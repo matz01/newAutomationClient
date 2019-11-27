@@ -16,8 +16,6 @@ import {
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
-import testPerformance from './utils/testPerformance';
-
 
 let vendor;
     let apiHost;
@@ -28,7 +26,7 @@ let nextAfterReload = undefined;
 let pollingIteration = 0;
 let lastStatus = 'waiting';
 let bodyResponse = null;
-let fps = undefined, avgFps = 60;
+let fps = 0;
 
 const parseError = (error) => {
     try {
@@ -45,23 +43,34 @@ const resetAutomation = () => {
     sendRequest();
 }
 
-const displayPerformance = async () => {
+const continuousTestPerformance = () => {
+    const times = [];
+    let average = 0;
+    const startTestingPerformance = () => {
+        window.requestAnimationFrame(() => {
+            const now = performance.now();
+            while (times.length > 0 && times[0] <= now - 1000) {
+                times.shift();
+            }
+            times.push(now);
+            average = Math.floor((average + times.length) / 2);
+            startTestingPerformance();
+            fps = average;
+            displayPerformance();
+        });
+    };
+    startTestingPerformance();
+};
+
+const displayPerformance = () => {
     try{
-        fps = await testPerformance();
-        if(avgFps !== undefined && fps !== undefined ){
-            avgFps = Math.round((parseInt(avgFps) + parseInt(fps)) / 2)
-        }
         const fpsForResp = fps === undefined ? '60' : fps.toString();
-        const avgFpsForResp = avgFps === undefined ? '60' : avgFps.toString();
         bodyResponse = {
             ...bodyResponse,
-            fps: fpsForResp,
-            avgFps: avgFpsForResp
+            fps: fpsForResp
         }
         document.getElementById('automation-console-performance-fps-data')
             .innerText = fps || '..';
-        document.getElementById('automation-console-performance-avgFps-data')
-            .innerText = avgFps || '..';
     } catch (e) {
         console.error(e)
     }
@@ -71,7 +80,6 @@ const saveCookiesBeforeReload = (data) => {
     document.cookie = `app-automation-actionApi=${actionApi}`;
     document.cookie = `app-automation-next=${data.next}`;
     document.cookie = `app-automation-testId=${testId}`;
-    document.cookie = `app-automation-avgFps=${avgFps}`;
 }
 
 const doTestAction = (data) => {
@@ -300,7 +308,6 @@ const sendRequest = async () => {
 const instructionResponseHandler = (data) => {
     try {
         displayLog('<-', `${data.action}`);
-        displayPerformance();
         if (data.path === undefined) {
             setTimeout(() => {
                 sendInstructionsRequest();
@@ -341,7 +348,6 @@ const doOnLoad = () => {
     try {
         if (getCookieByName(`app-automation-actionApi`) !== undefined) {
             actionApi = getCookieByName(`app-automation-actionApi`);
-            avgFps = getCookieByName('app-automation-avgFps');
             nextAfterReload = progressiveActionId = getCookieByName(`app-automation-next`);
             if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
                 toggleMinimizedConsole(true)
@@ -369,6 +375,7 @@ const automation = () => {
     try {
         const pJson = require('../package.json');
         createConsole();
+        continuousTestPerformance();
         displayLog('##', `lib version: ${pJson.version}`);
         const script_tag = document.getElementById('automationScriptTest');
         const API_HOST = script_tag.getAttribute("api_host");

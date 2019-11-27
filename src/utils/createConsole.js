@@ -104,8 +104,7 @@ const createConsole = () => {
     createIdConsole();
     createMinimizedConsole();
     createMainPerformance()
-    createPerformanceConsole('avgFps', 0);
-    createPerformanceConsole('fps', 1);
+    createPerformanceConsole('fps', 0);
     toggleMinimizedConsole(false);
 };
 
