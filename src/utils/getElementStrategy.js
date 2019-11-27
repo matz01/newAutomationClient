@@ -18,11 +18,17 @@ const getElementStrategy = (path) => {
     try {
         if (path.search(/\[/g) === -1) {
             const el = document.querySelectorAll(`*[id=${path}]`) || [];
-            return el[0];
+            return {
+                singleElement: el[0],
+                elementsLength: el.length,
+            };
         }
-        const xEl = document.evaluate( path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null );
-        console.log('.....', xEl)
-        return get(xEl, 'singleNodeValue');
+        const xElList = document.evaluate( path, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null );
+        const singleEl = document.evaluate( path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null );
+        return {
+            singleElement: get(singleEl, 'singleNodeValue'),
+            elementsLength: get(xElList, 'snapshotLength', 0),
+        };
     } catch (e) {
         throw e
     }

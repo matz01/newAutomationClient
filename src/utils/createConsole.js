@@ -4,11 +4,13 @@ const baseHeight = 3.2;
 const idBaseHeight = 1.8;
 const boxWidth = 30;
 const fontSize = .9;
+const pfmWidth = 3.5;
 const colors = {
     green: '#689f38',
     purple: '#454d66',
     red: '#800020',
-    blue: '#014666'
+    blue: '#014666',
+    grey: '#eee'
 }
 const baseStyle = `pointer-events: none; font-family: "Courier New", Courier, monospace; font-size:${fontSize}em; position: absolute; box-sizing: border-box; padding: .4em .3em; z-index: 999999999; border-radius: .2em; min-height:${idBaseHeight}em; overflow: hidden; text-overflow: ellipsis;`;
 
@@ -50,9 +52,38 @@ const createMinimizedConsole = () => {
     );
 }
 
+const createMainPerformance = () => {
+    const id = `automation-console-performance`
+    createElement(
+        id,
+        `width: 13em; height: 4em; font-weight: bold; background-color: padding: 0; #222; right: ${baseBorderMargin + .2 + boxWidth}em;`,
+        0
+    );
+}
+
+const createPerformanceConsole = (type, position, width = pfmWidth) => {
+    const id = `automation-console-performance-${type}`;
+
+    const box = document.createElement('div');
+    box.setAttribute('id', id);
+
+    box.style.cssText = `${baseStyle}; bottom: 0; width: ${width}em; height: 3em; font-weight: bold; background-color: ${colors.grey}; right: ${position * (pfmWidth + .2)}em;`
+    document.getElementById('automation-console-performance').appendChild(box);
+
+    const label = document.createElement('div');
+    const data = document.createElement('div');
+    data.setAttribute('id', `${id}-data`);
+    label.style.cssText = `font-size: .7em; color: '#222`;
+    data.style.cssText = `font-weight: bold; color: '#222`;
+    label.innerText = type;
+    document.getElementById(id).appendChild(label);
+    document.getElementById(id).appendChild(data);
+};
+
 const toggleMainConsole = (show) => {
     document.getElementById('idConsole').style.display = show ? 'block' : 'none';
     document.getElementById('logConsole').style.display = show ? 'block' : 'none';
+    document.getElementById('automation-console-performance').style.right = show ? `${baseBorderMargin + .2 + boxWidth}em` : `${baseBorderMargin + .2 + 2}em`
 }
 
 const toggleMinimizedConsole = (show) => {
@@ -72,6 +103,9 @@ const createConsole = () => {
     createLogConsole();
     createIdConsole();
     createMinimizedConsole();
+    createMainPerformance()
+    createPerformanceConsole('avgFps', 0);
+    createPerformanceConsole('fps', 1);
     toggleMinimizedConsole(false);
 };
 

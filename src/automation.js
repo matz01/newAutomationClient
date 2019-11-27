@@ -16,6 +16,7 @@ import {
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
+import testPerformance from './utils/testPerformance';
 
 
 let vendor;
@@ -27,6 +28,7 @@ let nextAfterReload = undefined;
 let pollingIteration = 0;
 let lastStatus = 'waiting';
 let bodyResponse = null;
+let fps = undefined, avgFps = 60;
 
 const parseError = (error) => {
     try {
@@ -43,9 +45,37 @@ const resetAutomation = () => {
     sendRequest();
 }
 
+const displayPerformance = async () => {
+    try{
+        fps = await testPerformance();
+        if(avgFps !== undefined && fps !== undefined ){
+            avgFps = Math.round((parseInt(avgFps) + parseInt(fps)) / 2)
+        }
+        bodyResponse = {
+            ...bodyResponse,
+            fps: fps || 60,
+            avgFps: avgFps || 60
+        }
+        document.getElementById('automation-console-performance-fps-data')
+            .innerText = fps || '..';
+        document.getElementById('automation-console-performance-avgFps-data')
+            .innerText = avgFps || '..';
+    } catch (e) {
+        console.error(e)
+    }
+};
+
+const saveCookiesBeforeReload = (data) => {
+    document.cookie = `app-automation-actionApi=${actionApi}`;
+    document.cookie = `app-automation-next=${data.next}`;
+    document.cookie = `app-automation-testId=${testId}`;
+    document.cookie = `app-automation-avgFps=${avgFps}`;
+}
+
 const doTestAction = (data) => {
     try {
         lastStatus = 'ok';
+        displayPerformance();
         switch (data.action) {
             case 'clientSettings':
                 displayLog('#', 'clientSettings');
@@ -58,9 +88,7 @@ const doTestAction = (data) => {
 
             case 'goToPage':
                 displayLog('{}', `url: ${get(data, 'params.url')}`);
-                document.cookie = `app-automation-actionApi=${actionApi}`;
-                document.cookie = `app-automation-next=${data.next}`;
-                document.cookie = `app-automation-testId=${testId}`;
+                saveCookiesBeforeReload(data);
                 gotoPage(data.params);
                 sendRequest();
                 break;
@@ -73,7 +101,7 @@ const doTestAction = (data) => {
                 break;
 
             case 'clearDataAndReload':
-                if(nextAfterReload === data.next) {
+                if(parseInt(nextAfterReload) === data.next) {
                     resetAutomation();
                     break;
                 }
@@ -81,10 +109,8 @@ const doTestAction = (data) => {
                 const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
                 clearAllData();
                 document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
-                document.cookie = `app-automation-actionApi=${actionApi}`;
-                document.cookie = `app-automation-next=${data.next}`;
-                document.cookie = `app-automation-testId=${testId}`;
-                displayLog('##', 'cookies deleted');
+                saveCookiesBeforeReload(data);
+                displayLog('##', 'cookies deleted, reload in 2 seconds');
                 displayLog('##', `next: ${data.next}`)
                 setTimeout(()=>{
                     reloadPage()
@@ -270,6 +296,7 @@ const sendRequest = async () => {
 const instructionResponseHandler = (data) => {
     try {
         displayLog('<-', `${data.action}`);
+        displayPerformance();
         if (data.path === undefined) {
             setTimeout(() => {
                 sendInstructionsRequest();
@@ -310,6 +337,7 @@ const doOnLoad = () => {
     try {
         if (getCookieByName(`app-automation-actionApi`) !== undefined) {
             actionApi = getCookieByName(`app-automation-actionApi`);
+            avgFps = getCookieByName('app-automation-avgFps');
             nextAfterReload = progressiveActionId = getCookieByName(`app-automation-next`);
             if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
                 toggleMinimizedConsole(true)

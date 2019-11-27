@@ -4,7 +4,7 @@ const checkElementByPath = (path) => {
     try {
         try {
             const elementList = getElementStrategy(path);
-            return elementList !== undefined;
+            return elementList.elementsLength > 0;
         } catch (e) {
             throw e;
         }
