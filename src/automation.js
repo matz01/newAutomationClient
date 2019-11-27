@@ -51,10 +51,12 @@ const displayPerformance = async () => {
         if(avgFps !== undefined && fps !== undefined ){
             avgFps = Math.round((parseInt(avgFps) + parseInt(fps)) / 2)
         }
+        const fpsForResp = fps === undefined ? '60' : fps.toString();
+        const avgFpsForResp = avgFps === undefined ? '60' : avgFps.toString();
         bodyResponse = {
             ...bodyResponse,
-            fps: fps || 60,
-            avgFps: avgFps || 60
+            fps: fpsForResp,
+            avgFps: avgFpsForResp
         }
         document.getElementById('automation-console-performance-fps-data')
             .innerText = fps || '..';
@@ -147,7 +149,8 @@ const doTestAction = (data) => {
 
             case 'getElementCount':
                 const numOfElement = countElements(data.params);
-                bodyResponse = { response: numOfElement };
+                bodyResponse = { response: numOfElement.toString() };
+                console.log("getElementCount bodyResponse", bodyResponse)
                 sendRequest();
                 break;
 
@@ -273,6 +276,7 @@ const sendInstructionsRequest = async () => {
 };
 
 const sendRequest = async () => {
+    console.log("bodyResponse on request", bodyResponse)
     displayLog('->', `status: ${lastStatus} | index: ${progressiveActionId}${bodyResponse === null ? '' : ' | data in body'}`);
     try {
         const url = `${apiHost}${actionApi}`;
