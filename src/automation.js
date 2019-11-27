@@ -26,7 +26,7 @@ let nextAfterReload = undefined;
 let pollingIteration = 0;
 let lastStatus = 'waiting';
 let bodyResponse = null;
-let fps = 0;
+let fps = 60;
 
 const parseError = (error) => {
     try {
@@ -45,7 +45,7 @@ const resetAutomation = () => {
 
 const continuousTestPerformance = () => {
     const times = [];
-    let average = 0;
+    let average = 60;
     const startTestingPerformance = () => {
         window.requestAnimationFrame(() => {
             const now = performance.now();
