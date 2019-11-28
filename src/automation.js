@@ -72,7 +72,8 @@ const displayPerformance = () => {
         document.getElementById('automation-console-performance-fps-data')
             .innerText = fps || '..';
     } catch (e) {
-        console.error(e)
+        document.getElementById('automation-console-performance-fps-data')
+            .innerText = '!!';
     }
 };
 
@@ -158,7 +159,6 @@ const doTestAction = (data) => {
             case 'getElementCount':
                 const numOfElement = countElements(data.params);
                 bodyResponse = { response: numOfElement.toString() };
-                console.log("getElementCount bodyResponse", bodyResponse)
                 sendRequest();
                 break;
 
@@ -284,7 +284,6 @@ const sendInstructionsRequest = async () => {
 };
 
 const sendRequest = async () => {
-    console.log("bodyResponse on request", bodyResponse)
     displayLog('->', `status: ${lastStatus} | index: ${progressiveActionId}${bodyResponse === null ? '' : ' | data in body'}`);
     try {
         const url = `${apiHost}${actionApi}`;
