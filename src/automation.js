@@ -44,22 +44,26 @@ const resetAutomation = () => {
 }
 
 const continuousTestPerformance = () => {
-    const times = [];
-    let average = 60;
-    const startTestingPerformance = () => {
-        window.requestAnimationFrame(() => {
-            const now = performance.now();
-            while (times.length > 0 && times[0] <= now - 1000) {
-                times.shift();
-            }
-            times.push(now);
-            average = Math.floor((average + times.length) / 2);
-            startTestingPerformance();
-            fps = average;
-            displayPerformance();
-        });
-    };
-    startTestingPerformance();
+    try{
+        const times = [];
+        let average = 60;
+        const startTestingPerformance = () => {
+            window.requestAnimationFrame(() => {
+                const now = performance.now();
+                while (times.length > 0 && times[0] <= now - 1000) {
+                    times.shift();
+                }
+                times.push(now);
+                average = Math.floor((average + times.length) / 2);
+                startTestingPerformance();
+                fps = average;
+                displayPerformance();
+            });
+        };
+        startTestingPerformance();
+    } catch (e) {
+        document.getElementById('automation-console-performance').style.display = 'none';
+    }
 };
 
 const displayPerformance = () => {
@@ -267,7 +271,6 @@ const asyncWaitForElementNotInPage = (data) => {
 
 const sendInstructionsRequest = async () => {
     displayLog('->', 'request to instruction');
-    //setTimeout(() => {gotoPage({url: ''})}, 6000)
     try {
         const url = `${apiHost}/instructions`;
         const headers = {
