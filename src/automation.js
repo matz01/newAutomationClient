@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import createConsole, {
     toggleMainConsole,
     toggleMinimizedConsole
@@ -362,7 +363,8 @@ const responseHandler = (data) => {
 
 const doOnLoad = () => {
     try {
-        if (getCookieByName(`app-automation-actionApi`) !== undefined) {
+        const cookieActionApi = getCookieByName(`app-automation-actionApi`)
+        if (!isEmpty(cookieActionApi)) {
             actionApi = getCookieByName(`app-automation-actionApi`);
             nextAfterReload = progressiveActionId = getCookieByName(`app-automation-next`);
             if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
