@@ -37,8 +37,10 @@ const clickElement = (data) => {
         const isClickable = isInWindowAndVisible(el);
         if (!isClickable) return 'ko';
         simulateMouseEvent(el, 'mousemove');
-        simulateMouseEvent(el, 'mousedown');
-        simulateMouseEvent(el, 'mouseup');
+        setTimeout(() => {
+            simulateMouseEvent(el, 'click');
+        }, 100)
+        //el.click();
         return 'ok';
     } catch (e) {
         throw e;
