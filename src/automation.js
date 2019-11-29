@@ -169,6 +169,14 @@ const doTestAction = (data) => {
                 sendRequest();
                 break;
 
+            case 'readCookie':
+                const cookieToReadName = get(data, 'params.cookieName');
+                const cookieToReturn = getCookieByName(cookieToReadName);
+                displayLog('##', `${cookieToReadName}: ${cookieToReturn}`);
+                bodyResponse = { response: cookieToReturn };
+                sendRequest();
+                break;
+
             case 'deleteCookie':
                 const cookieToDeleteName = get(data, 'params.cookieName');
                 document.cookie = `${cookieToDeleteName}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
@@ -179,12 +187,6 @@ const doTestAction = (data) => {
                 const numOfElement = countElements(data.params);
                 bodyResponse = { response: numOfElement.toString() };
                 sendRequest();
-                break;
-
-            case 'sleep':
-                const delay = get(data, 'params.time');
-                displayLog('{}', `sleep for ${delay}s`);
-                setTimeout(sendRequest, (delay * 1000));
                 break;
 
             case 'connected':
@@ -319,8 +321,6 @@ const sendRequest = async () => {
         displayLog('!!', `error on sendRequest: ${parseError(e)}`);
     }
 };
-
-
 
 const instructionResponseHandler = (data) => {
     try {
