@@ -212,7 +212,12 @@ const doTestAction = (data) => {
                 break;
 
             case 'finish':
-                displayLog('<>', 'Test completed')
+                displayLog('##', 'Test completed')
+                sendRequest();
+                break;
+
+            case 'deletedResource':
+                displayLog('<>', 'Resource deleted')
                 toggleMainConsole(true);
                 toggleMinimizedConsole(false)
                 reloadInInMinutes(3);
