@@ -3,7 +3,7 @@ import { isInWindowAndVisible } from '../actions/elementIsVisible';
 
 const MouseEventPolyfill = (eventType, params) => {
     params = params || { bubbles: false, cancelable: false };
-    var mouseEvent = document.createEvent('MouseEvent');
+    let mouseEvent = document.createEvent('MouseEvent');
     mouseEvent.initMouseEvent(eventType,
         params.bubbles,
         params.cancelable,
@@ -33,12 +33,11 @@ const clickElement = (data) => {
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
-        /*
+
         const isClickable = isInWindowAndVisible(el);
         if (!isClickable) return 'ko';
 
-         */
-        document.elementFromPoint(xPos, yPos).click();
+        el.click();
         simulateMouseover(el);
         return 'ok';
     } catch (e) {
