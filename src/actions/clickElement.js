@@ -36,18 +36,17 @@ const clickElement = (data) => {
 
         const isClickable = isInWindowAndVisible(el);
         if (!isClickable) return 'ko';
-
-        el.click();
-        simulateMouseover(el);
+        simulateMouseEvent(el, 'mousemove');
+        simulateMouseEvent(el, 'click');
         return 'ok';
     } catch (e) {
         throw e;
     }
 };
 
-const simulateMouseover = (myTarget) => {
+const simulateMouseEvent = (myTarget, evt) => {
     try {
-        const event = new MouseEvent('mousemove', {
+        const event = new MouseEvent(evt, {
             'view': window,
             'bubbles': true,
             'cancelable': true
@@ -66,6 +65,5 @@ const simulateMouseover = (myTarget) => {
         }
     }
 };
-
 
 export default clickElement;

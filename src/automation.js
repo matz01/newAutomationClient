@@ -161,6 +161,19 @@ const doTestAction = (data) => {
                 sendRequest();
                 break;
 
+            case 'addCookie':
+                const cookieToAddName = get(data, 'params.cookieName');
+                const cookieToAddVale = get(data, 'params.cookieValue');
+                document.cookie = `${cookieToAddName}=${cookieToAddVale}`;
+                sendRequest();
+                break;
+
+            case 'deleteCookie':
+                const cookieToDeleteName = get(data, 'params.cookieName');
+                document.cookie = `${cookieToDeleteName}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT`;
+                sendRequest();
+                break;
+
             case 'getElementCount':
                 const numOfElement = countElements(data.params);
                 bodyResponse = { response: numOfElement.toString() };
