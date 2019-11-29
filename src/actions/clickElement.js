@@ -54,7 +54,7 @@ const simulateMouseEvent = (myTarget, evt) => {
         myTarget.dispatchEvent(event);
     } catch (e) {
         try {
-            const event = new MouseEventPolyfill('mousemove', {
+            const event = new MouseEventPolyfill(evt, {
                 'view': window,
                 'bubbles': true,
                 'cancelable': true
