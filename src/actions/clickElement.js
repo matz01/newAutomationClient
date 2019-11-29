@@ -24,23 +24,7 @@ const MouseEventPolyfill = (eventType, params) => {
     return mouseEvent;
 };
 
-const elementsFromPoint = (x, y) => {
-    let parents = [];
-    let parent = void 0;
-    do {
-        if (parent !== document.elementFromPoint(x, y)) {
-            parent = document.elementFromPoint(x, y);
-            parents.push(parent);
-            parent.style.pointerEvents = 'none';
-        } else {
-            parent = false;
-        }
-    } while (parent);
-    parents.forEach(function (parent) {
-        return parent.style.pointerEvents = 'all';
-    });
-    return parents;
-}
+
 
 const clickElement = (data) => {
     try {
@@ -49,18 +33,12 @@ const clickElement = (data) => {
         const rect = el.getBoundingClientRect(),
             xPos = rect.left,
             yPos = rect.top;
+        /*
         const isClickable = isInWindowAndVisible(el);
         if (!isClickable) return 'ko';
 
-
-
-
-        if (typeof document !== 'undefined' && typeof document.elementsFromPoint === 'undefined') {
-            elementsFromPoint(xPos, yPos).click();
-        } else {
-            document.elementFromPoint(xPos, yPos).click();
-        }
-
+         */
+        document.elementFromPoint(xPos, yPos).click();
         simulateMouseover(el);
         return 'ok';
     } catch (e) {

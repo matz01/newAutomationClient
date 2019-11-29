@@ -16,6 +16,7 @@ import {
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
+import doPolyfill from './utils/polyfill';
 
 let vendor;
     let apiHost;
@@ -375,6 +376,7 @@ const doOnLoad = () => {
 
 const automation = () => {
     try {
+        doPolyfill();
         const pJson = require('../package.json');
         createConsole();
         continuousTestPerformance();
