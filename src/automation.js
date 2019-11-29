@@ -367,7 +367,8 @@ const doOnLoad = () => {
         if (!isEmpty(cookieActionApi)) {
             actionApi = getCookieByName(`app-automation-actionApi`);
             nextAfterReload = progressiveActionId = getCookieByName(`app-automation-next`);
-            if (getCookieByName(`app-automation-minimizedConsoleDisplay`) !== undefined ){
+            const toggleConsoleApi = getCookieByName(`app-automation-minimizedConsoleDisplay`)
+            if (!isEmpty(toggleConsoleApi)) {
                 toggleMinimizedConsole(true)
                 toggleMainConsole(false)
             }
