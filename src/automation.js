@@ -20,9 +20,10 @@ import getDefaultOptions from './getDeafaultOptions';
 import doPolyfill from './utils/polyfill';
 
 let vendor;
-    let apiHost;
-    let actionApi;
-    let testId;
+let apiHost;
+let actionApi;
+let testId;
+let rootpath;
 let progressiveActionId = 0;
 let nextAfterReload = undefined;
 let pollingIteration = 0;
@@ -100,6 +101,7 @@ const doTestAction = (data) => {
                     toggleMainConsole(false);
                     toggleMinimizedConsole(true);
                 }
+                rootpath = get(data, 'params.rootpath', '/');
                 sendRequest();
                 break;
 
@@ -254,7 +256,7 @@ const reloadInInMinutes = (min) => {
 };
 
 const reloadPage = () => {
-    window.location.replace(`./index.html?refresh=${Date.now()}#/`);
+    window.location.replace(rootpath);//
 }
 
 const asyncWaitForElement = (data, isVisible) => {
