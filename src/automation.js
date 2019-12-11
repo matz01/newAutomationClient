@@ -12,7 +12,17 @@ import {
 } from './utils/doDisplay';
 import deleteCookies from './utils/deleteCookies';
 import {
-    clickElement, elementIsInPage, gotoPage, getSource, countElements, elementIsVisible, clearAllData, getText, elementIsNotInPage
+    clickElement,
+    elementIsInPage,
+    gotoPage,
+    getSource,
+    countElements,
+    elementIsVisible,
+    clearAllData,
+    getText,
+    elementIsNotInPage,
+    getElementAttribute,
+    getLocation
 } from './actions';
 import pressKey from './actions/pressKey';
 import fetch from './fetch';
@@ -116,6 +126,17 @@ const doTestAction = (data) => {
                 displayLog('{}', `click on: ${get(data, 'params.element')}`);
                 lastStatus = clickElement(data.params);
                 if (lastStatus === 'ko') displayLog('!!', 'element non clickable')
+                sendRequest();
+                break;
+
+            case 'getElementAttribute':
+                displayLog('{}', `elementAttr: ${get(data, 'params.attribute_key')}`);
+                bodyResponse = { response: getElementAttribute(data.params) };
+                sendRequest();
+                break;
+
+            case 'getLocation':
+                bodyResponse = { response: getLocation() };
                 sendRequest();
                 break;
 

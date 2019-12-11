@@ -7,6 +7,8 @@ import countElements from './actions/countElements';
 import clearAllData from './actions/clearAllData';
 import getText from './actions/getText';
 import elementIsNotInPage from './actions/elementIsNotInPage';
+import getElementAttribute from './actions/getElementAttribute';
+import getLocation from './actions/getLocation';
 
 export {
     elementIsInPage,
@@ -18,4 +20,6 @@ export {
     clearAllData,
     getText,
     elementIsNotInPage,
+    getElementAttribute,
+    getLocation,
 }
