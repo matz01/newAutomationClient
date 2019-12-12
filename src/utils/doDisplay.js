@@ -7,7 +7,7 @@ export const displayId = (api) => {
 };
 
 export const displayLog = (type, msg) => {
-    if (type === '!!'){
+    if (type === '++'){
         toggleMainConsole(true);
         toggleMinimizedConsole(false)
         setConsoleColor('red');

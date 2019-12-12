@@ -235,15 +235,20 @@ const doTestAction = (data) => {
                 break;
 
             case 'finish':
-                displayLog('##', 'Test completed')
+                displayLog('##', 'Test completed');
                 sendRequest();
                 break;
 
             case 'deletedResource':
-                displayLog('<>', 'Resource deleted')
+                if(data.testStatus === 'FAIL'){
+                    displayLog('++', 'TEST FAILED!!!');
+                    reloadInInMinutes(10);
+                } else {
+                    reloadInInMinutes(3);
+                }
+                displayLog('<>', 'Resource deleted');
                 toggleMainConsole(true);
-                toggleMinimizedConsole(false)
-                reloadInInMinutes(3);
+                toggleMinimizedConsole(false);
                 break;
 
             default:
