@@ -29,11 +29,11 @@ import fetch from './fetch';
 import getDefaultOptions from './getDeafaultOptions';
 import doPolyfill from './utils/polyfill';
 
-let vendor;
-let apiHost;
-let actionApi;
-let testId;
-let rootpath;
+let vendor,
+    apiHost,
+    actionApi,
+    testId,
+    rootpath;
 let progressiveActionId = 0;
 let nextAfterReload = undefined;
 let pollingIteration = 0;
@@ -112,6 +112,7 @@ const doTestAction = (data) => {
                     toggleMinimizedConsole(true);
                 }
                 rootpath = get(data, 'params.rootpath', '/');
+                document.cookie = `app-automation-rootpath=${rootpath}`;
                 sendRequest();
                 break;
 
@@ -147,7 +148,9 @@ const doTestAction = (data) => {
                 }
                 nextAfterReload = undefined;
                 const automationEnabledCookie = getCookieByName(`app-automation-enabled`);
+                const rootpathBeforeReload = getCookieByName(`app-automation-rootpath`);
                 clearAllData();
+                document.cookie = `app-automation-rootpath=${rootpathBeforeReload}`;
                 document.cookie = `app-automation-enabled=${automationEnabledCookie}`;
                 saveCookiesBeforeReload(data);
                 displayLog('##', 'cookies deleted, reload in 2 seconds');
@@ -282,7 +285,8 @@ const reloadInInMinutes = (min) => {
 };
 
 const reloadPage = () => {
-    window.location.replace(rootpath);//
+    const rootpathFromCookies = getCookieByName(`app-automation-rootpath`);
+    window.location.replace(rootpathFromCookies);//
 }
 
 const asyncWaitForElement = (data, isVisible) => {
