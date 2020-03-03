@@ -286,7 +286,7 @@ const reloadInInMinutes = (min) => {
 
 const reloadPage = () => {
     const rootpathFromCookies = getCookieByName(`app-automation-rootpath`);
-    window.location.replace(rootpathFromCookies);//
+    location.replace(rootpathFromCookies);//
 }
 
 const asyncWaitForElement = (data, isVisible) => {
